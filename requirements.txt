@@ -1,4 +1,7 @@
-streamlit
-pandas
-numpy
-textblob
+streamlit # 웹 앱 구현
+pandas # 데이터 처리
+numpy # 수치 연산
+tensorflow # 딥러닝 프레임워크
+scikit-learn  # 데이터 전처리 및 평가
+konlpy # 한국어 형태소 분석
+matplotlib # 시각화
