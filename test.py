@@ -13,6 +13,7 @@ test_data = test_data.dropna()
 # 중복된 리뷰 제거
 test_data = test_data.drop_duplicates(subset='document')
 
+# 데이터 분리
 X_test = test_data['document'].values
 y_test = test_data['label'].values
 
