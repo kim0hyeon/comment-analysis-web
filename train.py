@@ -44,7 +44,7 @@ X_val_padded = pad_sequences(X_val_seq, maxlen=100)
 model = Sequential([
     Embedding(input_dim=20000, output_dim=128),
     LSTM(64, return_sequences=False),
-    Dropout(0.3),
+    Dropout(0.4),
     Dense(1, activation='sigmoid')
 ])
 
@@ -52,7 +52,7 @@ model = Sequential([
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # 모델 학습
-model.fit(X_train_padded, y_train, epochs=5, batch_size=64, validation_data=(X_val_padded, y_val))
+model.fit(X_train_padded, y_train, epochs=8, batch_size=64, validation_data=(X_val_padded, y_val))
 
 # 4. 모델 저장
 # 모델 파일과 토크나이저 파일 저장
