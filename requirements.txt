@@ -6,6 +6,3 @@ scikit-learn  # 데이터 전처리 및 평가
 konlpy # 한국어 형태소 분석
 matplotlib # 시각화
 google-api-python-client
-google-auth
-google-auth-oauthlib
-google-auth-httplib2
