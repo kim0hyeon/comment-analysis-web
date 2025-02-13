@@ -4,6 +4,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
+from tensorflow.keras.layers import Bidirectional
 import pickle
 
 # 1. 데이터 로드 및 전처리
@@ -41,9 +42,9 @@ X_val_padded = pad_sequences(X_val_seq, maxlen=100)
 
 # 3. 모델 정의 및 학습
 model = Sequential([
-    Embedding(input_dim=20000, output_dim=128, input_length=100),
+    Embedding(input_dim=20000, output_dim=128),
     LSTM(64, return_sequences=False),
-    Dropout(0.5),
+    Dropout(0.3),
     Dense(1, activation='sigmoid')
 ])
 
