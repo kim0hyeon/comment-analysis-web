@@ -2,3 +2,4 @@
 enableCORS = false
 headless = true
 port = 8000
+showSidebarNavigation = false
