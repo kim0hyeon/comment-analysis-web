@@ -28,9 +28,9 @@ def analyze_sentiment(text):
     input_padded = pad_sequences(input_seq, maxlen=100)
     prediction = model.predict(input_padded)[0][0]
     
-    if prediction > 0.55:
+    if prediction > 0.6:
         sentiment = "긍정"
-    elif prediction < 0.45:
+    elif prediction < 0.4:
         sentiment = "부정"
     else:
         sentiment = "중립"
