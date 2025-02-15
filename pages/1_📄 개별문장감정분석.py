@@ -95,7 +95,37 @@ def make_chart(score):
     return fig
 
 def run_text_analysis():
-    st.title("개별 문장 감정 분석")
+    st.title("📄 개별 문장 감정 분석")
+
+    # 사이드바를 사용방법 설명으로 꾸미기
+    with st.sidebar:
+        st.subheader("사용 방법")
+
+        # 문장 입력란 (기본 문구)
+        sidebar_comment = st.text_area("", value="여기에 댓글을 입력하세요!")
+
+        # 분석하기 버튼 & 오른쪽에 "👈클릭!"
+        col_sb1, col_sb2 = st.columns([1, 2])
+        with col_sb1:
+            sidebar_btn1 = st.button("'분석하기'")
+        with col_sb2:
+            st.write("👈 클릭!")
+        
+        # 결과 표시
+        st.markdown("---")
+        st.subheader("분석 결과 (예시)")
+        st.image("img/page1_result_chart.png")
+        st.image("img/page2_result_text.png")
+
+        # 초기화 방법 표시
+        st.markdown("---")
+        st.subheader("다시 작성하고싶다면?")
+        col_sb3, col_sb4 = st.columns([1, 2])
+        with col_sb3:
+            sidebar_btn2 = st.button("'초기화'")
+        with col_sb4:
+            st.write("👈 클릭!")
+
 
     # 🔥 세션 상태에 입력값 저장 (초기화 버튼을 위해 필요)
     if "user_input" not in st.session_state:
@@ -114,7 +144,7 @@ def run_text_analysis():
 
                 fig = make_chart(score)
 
-                st.session_state["result"] = {
+                st.session_state["individual_result"] = {
                     "sentiment": sentiment,
                     "score": score,
                     "fig": fig
@@ -128,12 +158,12 @@ def run_text_analysis():
         if st.button("초기화"):
             # 🔥 입력 필드 및 결과 초기화
             st.session_state["user_input"] = ""
-            st.session_state.pop("result", None)
+            st.session_state.pop("individual_result", None)
             st.rerun()
 
     # 🔥 분석 결과 출력 (세션 상태 활용)
-    if "result" in st.session_state:
-        result = st.session_state["result"]
+    if "individual_result" in st.session_state:
+        result = st.session_state["individual_result"]
         st.write("### 분석 결과")
         st.plotly_chart(result["fig"])
 
