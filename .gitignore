@@ -1,0 +1,42 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+
+# macOS
+.DS_Store
+
+# VSCode settings
+.vscode/
+
+# Streamlit cache / thumbnails
+.streamlit/
+
+# HuggingFace cache
+# (만약 전역 캐시를 사용 중이라면)
+# ~/.cache/huggingface/
+# 또는 프로젝트 내 캐시폴더 지정 시
+cache/
+*.cache/
+
+# 로그 파일
+*.log
+
+# 환경설정 파일
+.env
+.env.*
+
+# 빌드/배포 아티팩트
+dist/
+build/
+
+# (선택) 로컬 모델·데이터 디렉터리
+# 만약 models/나 data/를 버전 관리에 포함하지 않는다면
+models/
+data/
+
+# 이미지 출력 폴더 (필요 시)
+# img/
