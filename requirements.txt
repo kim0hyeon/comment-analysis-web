@@ -3,7 +3,7 @@ streamlit
 plotly
 emoji
 soynlp
-onnxruntime;
+onnxruntime
 transformers>=4.0,<5.0
 sentencepiece
 google-api-python-client
