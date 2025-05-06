@@ -5,6 +5,25 @@ import onnxruntime as ort
 from transformers import AutoTokenizer
 import numpy as np
 
+from azure.storage.blob import BlobServiceClient
+from pathlib import Path
+
+MODEL_PATH = Path("models/koelectra.onnx")
+CONTAINER_NAME = "models"
+BLOB_NAME = "koelectra.onnx"
+
+def download_model_from_blob():
+    conn_str = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
+    service = BlobServiceClient.from_connection_string(conn_str)
+    container = service.get_container_client(CONTAINER_NAME)
+    MODEL_PATH.parent.mkdir(exist_ok=True)
+    with open(MODEL_PATH, "wb") as f:
+        f.write(container.get_blob_client(BLOB_NAME).download_blob().readall())
+
+# Download the model from Blob Storage if not already present
+if not MODEL_PATH.exists():
+    download_model_from_blob()
+
 # -- 모델, 토크나이저 로드 (캐싱 권장) --
 @st.cache_resource
 def load_tokenizer_and_session():
