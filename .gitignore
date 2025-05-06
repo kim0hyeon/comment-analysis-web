@@ -30,9 +30,9 @@ cache/
 .env
 .env.*
 
-# 빌드/배포 아티팩트
+# 빌드/배포/모델 아티팩트
 dist/
 build/
-
+models/
 # 이미지 출력 폴더 (필요 시)
 # img/
