@@ -71,6 +71,34 @@ def analyze_sentiment(text):
         label = "중립"
     return label, prob
 
+def analyze_batch(texts):
+    # Tokenize all texts as a batch
+    enc = tokenizer(
+        texts,
+        return_tensors="np",
+        padding=True,
+        truncation=True,
+        max_length=128
+    )
+    # Run ONNX model once for the batch
+    logits = ort_session.run(
+        None,
+        {"input_ids": enc["input_ids"], "attention_mask": enc["attention_mask"]}
+    )[0]  # shape (batch_size, 2)
+    # Compute probabilities
+    probs = np.exp(logits) / np.exp(logits).sum(axis=1, keepdims=True)
+    results = []
+    for neg, pos in probs:
+        prob = max(neg, pos) * 100
+        if neg > pos and neg > 0.9:
+            label = "부정"
+        elif pos >= neg:
+            label = "긍정"
+        else:
+            label = "중립"
+        results.append((label, prob))
+    return results
+
 ##################################
 #  Youtube API 관련
 ##################################
@@ -207,9 +235,12 @@ def run_youtube_analysis():
                 
                 sentiments_result = []
                 with st.spinner("댓글 감정 분석중..."):
-                    for cmt in comments:
-                        s_label, s_score = analyze_sentiment(cmt)
-                        sentiments_result.append((cmt, s_label, s_score))
+                    # Batch analyze to speed up inference
+                    batch_results = analyze_batch(comments)
+                    sentiments_result = [
+                        (comment, label, score)
+                        for (comment, (label, score)) in zip(comments, batch_results)
+                    ]
                 
                 # 통계
                 total_count = sum(1 for _, label, _ in sentiments_result)
