@@ -5,6 +5,7 @@ __pycache__/
 
 # Virtual environment
 .venv/
+venv/
 
 # macOS
 .DS_Store
@@ -32,11 +33,6 @@ cache/
 # 빌드/배포 아티팩트
 dist/
 build/
-
-# (선택) 로컬 모델·데이터 디렉터리
-# 만약 models/나 data/를 버전 관리에 포함하지 않는다면
-models/
-data/
 
 # 이미지 출력 폴더 (필요 시)
 # img/
