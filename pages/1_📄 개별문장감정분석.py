@@ -4,7 +4,6 @@ import plotly.graph_objects as go
 import onnxruntime as ort
 from transformers import AutoTokenizer
 import numpy as np
-
 from azure.storage.blob import BlobServiceClient
 from pathlib import Path
 
