@@ -1,15 +1,12 @@
 # 용량이 1.3GB로 너무 커 ZIP Deploy가 허용하는 메모리-디스크 한도를 넘어섰기때문에 tar 프로세스가 SIGKILL된다.
-# pip install torch가 GPU 지원 빌드를 받아와 1GB를 넘게 차지하므로, CPU 전용 휠을 명시해 200MB정도로 줄일 수 있다.
---find-links https://download.pytorch.org/whl/cpu/torch_stable.html
 streamlit
 plotly
 emoji
 soynlp
-torch==2.0.1+cpu
+onnxruntime
 transformers>=4.0,<5.0
-accelerate
 sentencepiece
 google-api-python-client
 pandas
 altair
-tf-keras
+numpy

@@ -1,30 +1,39 @@
 import streamlit as st
 import os
 import plotly.graph_objects as go
-import torch
-from transformers import pipeline
+import onnxruntime as ort
+from transformers import AutoTokenizer
+import numpy as np
 
 # -- 모델, 토크나이저 로드 (캐싱 권장) --
 @st.cache_resource
-def load_sentiment_pipeline():
-    device = 0 if torch.cuda.is_available() else -1
-    return pipeline(
-        "text-classification",
-        model="Copycats/koelectra-base-v3-generalized-sentiment-analysis",
-        tokenizer="Copycats/koelectra-base-v3-generalized-sentiment-analysis",
-        device=device,
-        framework="pt"
+def load_tokenizer_and_session():
+    tokenizer = AutoTokenizer.from_pretrained(
+        "Copycats/koelectra-base-v3-generalized-sentiment-analysis"
     )
+    session = ort.InferenceSession(os.path.join("models", "koelectra.onnx"))
+    return tokenizer, session
 
-clf = load_sentiment_pipeline()
+tokenizer, ort_session = load_tokenizer_and_session()
 
 def analyze_sentiment(text):
-    pred = clf(text)[0]
-    prob = pred["score"] * 100
-    # extreme negative only if label is "0" and prob > 90%
-    if pred["label"] == "0" and prob > 90:
+    enc = tokenizer(
+        text,
+        return_tensors="np",
+        padding=True,
+        truncation=True,
+        max_length=128
+    )
+    logits = ort_session.run(
+        None,
+        {"input_ids": enc["input_ids"], "attention_mask": enc["attention_mask"]}
+    )[0]
+    probs = np.exp(logits) / np.exp(logits).sum(axis=1, keepdims=True)
+    neg, pos = probs[0]
+    prob = max(neg, pos) * 100
+    if neg > pos and neg > 0.9:
         sentiment = "부정"
-    elif pred["label"] == "1":
+    elif pos >= neg:
         sentiment = "긍정"
     else:
         sentiment = "중립"
