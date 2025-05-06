@@ -24,6 +24,13 @@ def download_model_from_blob():
 if not MODEL_PATH.exists():
     download_model_from_blob()
 
+# 만약 모델의 크기가 너무 작다면 Blob에서 다시 내려받는다.
+def should_download():
+    return not MODEL_PATH.exists() or MODEL_PATH.stat().st_size < 1_000_000
+
+if should_download():
+    download_model_from_blob()
+
 # -- 모델, 토크나이저 로드 (캐싱 권장) --
 @st.cache_resource
 def load_tokenizer_and_session():
