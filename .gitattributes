@@ -1,1 +1,2 @@
+# 파일 용량이 100MB를 넘어가서 lfs로 우회해서 저장해야 함
 models/koelectra.onnx filter=lfs diff=lfs merge=lfs -text
