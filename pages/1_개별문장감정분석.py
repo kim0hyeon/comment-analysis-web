@@ -64,10 +64,14 @@ def analyze_sentiment(text):
         sentiment = "중립"
     return sentiment, prob
 
-def make_chart(score):
+def make_chart(score, sentiment):
     # 가로 그래프 만들기
-    positive = int(score)
-    negative = 100 - int(score)
+    if sentiment is "부정":
+        negative = int(score)
+        positive = 100 - int(score)
+    else:
+        positive = int(score)
+        negative = 100 - int(score)
 
     # Figure 생성
     fig = go.Figure()
@@ -167,7 +171,7 @@ def run_text_analysis():
             if user_input.strip():
                 sentiment, score = analyze_sentiment(user_input.strip())
 
-                fig = make_chart(score)
+                fig = make_chart(score, sentiment)
 
                 st.session_state["individual_result"] = {
                     "sentiment": sentiment,
