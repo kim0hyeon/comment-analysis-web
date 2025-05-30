@@ -1,3 +1,17 @@
+# Copyright [2025-05-28] [monologg]
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import streamlit as st
 from googleapiclient.discovery import build
 import urllib.parse as urlparse
@@ -62,7 +76,7 @@ def analyze_sentiment(text):
     probs = np.exp(logits) / np.exp(logits).sum(axis=1, keepdims=True)
     neg, pos = probs[0]
     prob = max(neg, pos) * 100
-    if neg > pos and neg > 0.9:
+    if neg > pos and neg > 0.75:
         label = "부정"
     elif pos >= neg:
         label = "긍정"
@@ -169,7 +183,9 @@ def run_youtube_analysis():
             st.write("👈 클릭!")
 
 
-    youtube_url = st.text_input("분석할 YouTube 링크를 입력하세요 (예: https://www.youtube.com/watch?v=abcd1234)")
+    youtube_url = st.text_input("""분석할 YouTube 링크를 입력하세요 (예시)\n
+                                https://www.youtube.com/watch?v=fvaJDMD5xSk\n
+                                """)
 
     # 버튼 레이아웃 (분석하기 + 초기화 버튼 나란히)
     col1, col2, col3 = st.columns([3, 3, 1])
@@ -187,6 +203,7 @@ def run_youtube_analysis():
                         "video_id": video_id
                     }
                     st.session_state["youtube_url"] = youtube_url
+                    st.session_state["popup_shown"] = False  # 팝업 초기화
 
     with col3:
         if st.button("초기화"):
@@ -216,16 +233,16 @@ def run_youtube_analysis():
                 pos_count = sum(1 for _, label, _ in sentiments_result if label == "긍정")
                 neg_count = sum(1 for _, label, _ in sentiments_result if label == "부정")
                 neu_count = sum(1 for _, label, _ in sentiments_result if label == "중립")
-                
-                st.subheader("분석 결과")
-                st.write(f"***총 댓글 수: {total_count}개***")
-                st.write(f"- **:blue[긍정]** 적인 댓글: **{pos_count}**개")
-                st.write(f"- **:red[부정]** 적인 댓글: **{neg_count}**개")
-                st.write(f"- **중립** 적인 댓글: **{neu_count}**개")
 
-                st.markdown("---")
+                if neg_count/total_count*100 >= 15:
+                    st.error("시청에 주의가 필요합니다!")
+                else:
+                    st.info("시청에 문제가 없습니다!")
 
-                st.subheader("차트")
+                st.markdown(
+                    "<h3 style='margin-top:0;'>차트</h3>",
+                    unsafe_allow_html=True
+                )
                                 
                 # 차트 시각화
                 df = pd.DataFrame({
@@ -258,11 +275,37 @@ def run_youtube_analysis():
 
                 st.altair_chart(chart, use_container_width=True)
                 
-                # 예시 댓글 출력
-                st.write("### 예시 댓글")
+                # 분석 결과 박스 (한 번의 HTML 마크다운으로 렌더링)
+                html_summary = (
+                    "<div style='border:1px solid #ccc; padding:15px; border-radius:8px; "
+                    "background-color:#fafafa;'>"
+                    "<h3 style='margin-top:0;'>분석 결과</h3>"
+                    f"<p style='margin:4px 0;'><strong>총 댓글 수: {total_count}개</strong></p>"
+                    f"<p style='margin:4px 0;'><span style='color:blue; font-weight:bold;'>긍정</span> "
+                    f"적인 댓글: {pos_count}개</p>"
+                    f"<p style='margin:4px 0;'><span style='color:red; font-weight:bold;'>부정</span> "
+                    f"적인 댓글: {neg_count}개</p>"
+                    f"<p style='margin:4px 0;'><span style='font-weight:bold;'>중립</span> "
+                    f"적인 댓글: {neu_count}개</p>"
+                    "</div>"
+                    "<br>"
+                    "<br>"
+                )
+                st.markdown(html_summary, unsafe_allow_html=True)
+                
+                # 예시 댓글 출력 (HTML 박스 전체 생성 후 한 번에 렌더링)
+                html_comments = "<div style='border:1px solid #ccc; padding:15px; border-radius:8px; background-color:#f9f9f9;'>"
+                html_comments += "<h3 style='margin-top:0;'>예시 댓글</h3>"
                 for i, (comment_text, label, s_score) in enumerate(sentiments_result[:10], start=1):
-                    st.write(f"**{i}.** {comment_text}")
-                    st.write(f" - 감정: {label}, 점수: {s_score:.2f}%\n")
+                    # 댓글 본문
+                    html_comments += f"<p style='margin-bottom:4px;'><strong>{i}. {comment_text}</strong></p>"
+                    # 감정 레이블
+                    color = 'blue' if label == '긍정' else 'red' if label == '부정' else 'gray'
+                    html_comments += f"<p style='margin-top:0; margin-bottom:8px;'><span style='color:{color}; font-weight:bold;'>{label}</span> (s_score: {s_score:.2f}%)</p>"
+                    html_comments += "<br>"
+                html_comments += "</div>"
+                st.markdown(html_comments, unsafe_allow_html=True)
+                        
 
 if __name__ == "__main__":
     run_youtube_analysis()

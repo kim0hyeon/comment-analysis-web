@@ -66,7 +66,7 @@ def analyze_sentiment(text):
 
 def make_chart(score, sentiment):
     # 가로 그래프 만들기
-    if sentiment is "부정":
+    if sentiment == "부정":
         negative = int(score)
         positive = 100 - int(score)
     else:

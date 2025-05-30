@@ -16,8 +16,7 @@ def main():
         
         # 각 링크의 텍스트와 연결될 URL을 직접 넣어주시면 됩니다.
         st.write("💭 [Microsoft Azure와의 연동](https://chain-maple-8e6.notion.site/Microsoft-Azure-18e76c8cc99f802d9642e4f5de7b62ae) 👈click!")
-        st.write("🇰🇷 [한국어 댓글 감정 분석 모델](https://chain-maple-8e6.notion.site/18f76c8cc99f80b09953c630f0f43ef0?pvs=4) 👈 click!")
-        st.write("📜 [Page 구성](https://chain-maple-8e6.notion.site/Page-19a76c8cc99f80e4aa43f3a89a2d2be3?pvs=4) 👈 click!")
+        st.write("🇰🇷 [감정 분석 모델](https://chain-maple-8e6.notion.site/koelectra-base-v3-generalized-sentiment-analysis-1e476c8cc99f807bbcbae9360a57cbd7?source=copy_link) 👈 click!")
         st.write("💾 [YouTube API와 연동](https://chain-maple-8e6.notion.site/YouTube-Data-API-19b76c8cc99f809db281ca8eba3f3d9b?pvs=4) 👈 click!")
         st.write("🫙 [GitHub 저장소](https://github.com/kim0hyeon/comment-analysis-web) 👈 click!")
         st.markdown("---")
@@ -28,6 +27,7 @@ def main():
     st.subheader("팀명: 쏘세지야채볶음")
     st.write("**이름**: 김영현")
     st.write("**학번**: 2020006108")
+    st.write("**지도교수**: 박서연 교수님")
 
     st.markdown("---")
 
@@ -36,19 +36,23 @@ def main():
     st.markdown("""
             - **:red[프로젝트 계획 배경]**
 
-            이 아이디어는 YouTube Kids 서비스에서 떠올렸습니다. 현재 YouTube에는 YouTube Kids라는 서비스를 제공합니다.
+            이 프로젝트를 선정한 이유는 다음과 같습니다.
 
-            YouTube Kids에서는 12세 미만의 아이들이 부적절한 영상에 노출되지 않도록 영상 알고리즘을 제한합니다.
+            첫째, YouTube에는 12세 미만 어린이를 위한 'YouTube Kids' 서비스가 있어 부적절한 영상 노출을 방지합니다. 그러나 성인을 대상으로 한
 
-            하지만 요즘 YouTube에 게시되는 영상들 중엔 성인들도 시청하고 싶지 않은 썸네일 낚시 영상이나 콘텐츠 내용 자체가 부적절한 영상도 많습니다.
+            유사한 필터링 기능은 제공되지 않고 있습니다. 실제로 성인 시청자들도 성인용 콘텐츠 중에 불건전하거나 자극적인 썸네일 낚시 영상에 노출되는 경우가 많습니다.
+                
+            한편 '좋아요, 싫어요' 기반의 평가는 있지만, 싫어요 수는 공개되지 않아 시청 전 해당 영상의 문제점을 파악하기 어렵습니다. 따라서 시청자들이 남긴
+                
+            댓글을 사전 분석하여 불건전 영상을 미리 경고한다면, 보다 안전한 시청 환경을 제공할 수 있다고 판단했습니다.
 
-            그래서 이런 영상들을 시청하기 전에 미리 알림을 받을 수 있다면 어떨까? 하는 생각에서 이 아이디어를 떠올렸습니다.
+            둘째, YouTube Premium 구독료가 초기 8,900원에서 14,900으로 크게 인상되면서, 광고 차단 앱 사용이나 저가 해외 구독 등 편법을 이용하는 사례가 늘고                
 
-            게다가 YouTube 프리미엄의 구독 가격이 점점 올라 8,900원에서 14,900원까지 상승했습니다. 또, 돈을 내지 않고 광고를 제거하는 광고 차단 앱을 사용하는 사용자들도 많이 늘었습니다.
-
-            현재 YouTube 프리미엄 사용자들에게만 제공하는 기능은 광고 없는 시청, 오프라인 저장, 백그라운드 재생 등 일반 사용자들과 비교해 차별성이 적다고 보여집니다.
-
-            그런 점에서 부적절한 영상 체크 기능을 YouTube Premium 사용자들에게 제공한다면, 사용자들이 더 납득할만한 구독 서비스로 받아들일 수 있을 것입니다.
+            있습니다. 현재 Premium이 제공하는 핵심 기능(광고 제거, 오프라인 저장, 백그라운드 재생)은 일반 사용자들에게 차별적 가치를 제공하기에 다소 부족합니다.
+                
+            이때, '불건전 영상 식별'기능을 Premium 전용 혜택으로 추가한다면, 구독자가 체감하는 서비스 가치를 높여 합리적인 구독 비용으로 받아들일 수 있을 것으로
+                
+            기대합니다.
             """)
     st.markdown("""                
             \n\n\n
