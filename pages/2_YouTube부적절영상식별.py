@@ -76,9 +76,9 @@ def analyze_sentiment(text):
     probs = np.exp(logits) / np.exp(logits).sum(axis=1, keepdims=True)
     neg, pos = probs[0]
     prob = max(neg, pos) * 100
-    if neg > pos and neg > 0.75:
+    if neg > pos and neg > 0.85:
         label = "부정"
-    elif pos >= neg:
+    elif pos >= neg and pos > 0.75:
         label = "긍정"
     else:
         label = "중립"
@@ -156,15 +156,8 @@ def run_youtube_analysis():
 
     # 사용방법 설명하는 사이드바
     with st.sidebar:
-        st.subheader("사용 방법")
-        sidebar_url = st.text_area("", value="여기에 유튜브 url을 입력하세요!")
-
-        # 분석하기 버튼 & 오른쪽에 "👈클릭!"
-        col_sb1, col_sb2 = st.columns([3, 1])
-        with col_sb1:
-            sidebar_btn1 = st.button("'유튜브 댓글 추출 & 감정 분석'")
-        with col_sb2:
-            st.write("👈 클릭!")
+        st.subheader("모바일 링크 복사 방법")
+        st.image("img/mobile_manual.PNG")
 
         # 분석 결과
         st.markdown("---")
@@ -184,7 +177,7 @@ def run_youtube_analysis():
 
 
     youtube_url = st.text_input("""분석할 YouTube 링크를 입력하세요 (예시)\n
-                                https://www.youtube.com/watch?v=fvaJDMD5xSk\n
+                                https://www.youtube.com/watch?v=e3OQaHwg56o&t=1s\n
                                 """)
 
     # 버튼 레이아웃 (분석하기 + 초기화 버튼 나란히)
