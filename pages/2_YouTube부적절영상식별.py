@@ -92,11 +92,50 @@ API_key = "AIzaSyBrafWWm7JMMHCSe4SpB6vfqfx4YroAOoM"  # 실제 값으로 교체
 youtube = build("youtube", "v3", developerKey=API_key)
 
 def get_video_id_from_url(url: str):
-    parsed_url = urlparse.urlparse(url)
-    query_dict = urlparse.parse_qs(parsed_url.query)
-    video_id_list = query_dict.get("v")
-    if video_id_list and len(video_id_list) > 0:
-        return video_id_list[0]
+    """
+    Extracts the YouTube video ID from various YouTube URL formats, including:
+    - Standard web links (e.g., https://www.youtube.com/watch?v=VIDEO_ID)
+    - Mobile or m.youtube.com links with query parameters
+    - youtu.be short links (e.g., https://youtu.be/VIDEO_ID)
+    - YouTube app deep links (e.g., youtube://watch?v=VIDEO_ID or vnd.youtube://VIDEO_ID)
+    """
+    try:
+        parsed_url = urlparse.urlparse(url)
+        # 1. Handle youtu.be short links
+        if parsed_url.netloc.endswith("youtu.be"):
+            # Path is "/VIDEO_ID"
+            vid = parsed_url.path.lstrip("/")
+            return vid if vid else None
+
+        # 2. Handle standard HTTP(s) links (www.youtube.com or m.youtube.com)
+        query_dict = urlparse.parse_qs(parsed_url.query)
+        video_id_list = query_dict.get("v")
+        if video_id_list and len(video_id_list) > 0:
+            return video_id_list[0]
+
+        # 3. Handle YouTube app deep links (scheme might be "youtube" or "vnd.youtube")
+        # Example: youtube://watch?v=VIDEO_ID or vnd.youtube://VIDEO_ID
+        if parsed_url.scheme in ("youtube", "vnd.youtube"):
+            # If the path contains the ID directly (e.g., vnd.youtube://VIDEO_ID)
+            if parsed_url.netloc and not parsed_url.query:
+                return parsed_url.netloc
+            # Otherwise, treat like normal URL with query
+            query_dict = urlparse.parse_qs(parsed_url.query)
+            video_id_list = query_dict.get("v")
+            if video_id_list and len(video_id_list) > 0:
+                return video_id_list[0]
+
+        # 4. If the URL contains a "/shorts/VIDEO_ID" path
+        # Example: https://www.youtube.com/shorts/VIDEO_ID
+        path_parts = parsed_url.path.split("/")
+        if "shorts" in path_parts:
+            shorts_index = path_parts.index("shorts")
+            if shorts_index + 1 < len(path_parts):
+                return path_parts[shorts_index + 1]
+
+    except Exception:
+        return None
+
     return None
 
 def get_comments_by_video_id(video_id, max_results=50):
